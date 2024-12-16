@@ -1,0 +1,96 @@
+menu "OTA and Wifi Configuration"
+    config OTA_ACTIVATE
+        bool "Ota activar"
+        default false
+        help
+            Deshabilita la ota en el codigo
+    config ESP_WIFI_SSID
+        string "WiFi SSID"
+        default "myssid"
+        help
+            SSID (network name) for the example to connect to.
+
+    config ESP_WIFI_PASSWORD
+        string "WiFi Password"
+        default "mypassword"
+        help
+            WiFi password (WPA or WPA2) for the example to use.
+
+    config ESP_MAXIMUM_RETRY
+        int "Maximum retry"
+        default 5
+        help
+            Set the Maximum retry to avoid station reconnecting to the AP unlimited when the AP is really inexistent.
+    config EXAMPLE_FIRMWARE_UPGRADE_URL
+        string "firmware upgrade url endpoint"
+        default "https://github.com/Omega123456789/OTATEST01/blob/main/hello_world.bin"
+        help
+            URL of server which hosts the firmware
+            image.
+endmenu
+menu "Important Config"
+	config VERSION
+		string "version name"
+		default "test.bin"
+		help
+		    change before release, ota checks against this name
+endmenu
+menu "Bluetooth Configuration"
+
+    choice IBEACON_MODE
+        bool "iBeacon Mode"
+        default IBEACON_SENDER
+        help
+            Select the iBeacon Mode.
+
+        config IBEACON_SENDER
+            bool "iBeacon Sender Mode"
+            help
+                Select the iBeacon Sender Mode.
+
+        config IBEACON_RECEIVER
+            bool "iBeacon Receiver Mode"
+            help
+                Select the iBeacon Receiver Mode.
+
+    endchoice
+
+    config IBEACON_MODE
+        int
+        default 0 if IBEACON_SENDER
+        default 1 if IBEACON_RECEIVER
+
+endmenu
+
+
+        menu "Deep Sleep Configuration"
+
+            config EXAMPLE_GPIO_WAKEUP
+                bool "Enable wakeup from GPIO (EXT0)"
+                default y
+                depends on SOC_PM_SUPPORT_EXT0_WAKEUP
+                help
+                    Esta opción habilita el despertado desde deep sleep usando un único pin GPIO (EXT0).
+                    Asegúrate de conectar una resistencia pull-up o pull-down externa si utilizas niveles bajos para el wakeup.
+        
+            if EXAMPLE_GPIO_WAKEUP
+        
+                config EXAMPLE_GPIO_WAKEUP_PIN
+                    int "Wakeup GPIO Pin"
+                    default 0
+                    help
+                        Selecciona el pin GPIO que se utilizará para despertar el dispositivo desde deep sleep.
+                        Asegúrate de seleccionar un pin válido y que no esté siendo utilizado por otras funciones.
+        
+                config EXAMPLE_GPIO_WAKEUP_HIGH_LEVEL
+                    bool "Wakeup on High Level"
+                    default y
+                    help
+                        Selecciona el nivel lógico que desencadenará el despertado.
+                        - Si está habilitado, el dispositivo se despertará cuando el pin GPIO esté en nivel alto.
+                        - Si está deshabilitado, el dispositivo se despertará cuando el pin GPIO esté en nivel bajo.
+        
+            endif
+        
+        endmenu        
+
